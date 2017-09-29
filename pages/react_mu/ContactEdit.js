@@ -1,11 +1,11 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
-import RaisedButton from 'material-ui/RaisedButton';
-import TextField from 'material-ui/TextField';
+import Dialog from './material-ui/Dialog';
+import Button from './material-ui/Button';
+import TextField from './material-ui/TextField';
 import Client from './Client';
-import UsePacks from './UsePacks';
-import AutoComplete from 'material-ui/AutoComplete';
-import DatePicker from 'material-ui/DatePicker';
+//import UsePacks from './UsePacks';
+//import AutoComplete from './material-ui/AutoComplete';
+//import DatePicker from './material-ui/DatePicker';
 import areIntlLocalesSupported from 'intl-locales-supported';
 import update from 'immutability-helper';
 let DateTimeFormat;
@@ -205,7 +205,7 @@ export default class ContactEdit extends React.Component {
     //var m2 = new Date(this.state.tiaoshi_date.replace(/-/,"/"));
     return (
       <div>
-        <RaisedButton label={this.props.title} onTouchTap={this.handleOpen} />
+        <Button raised onClick={this.handleOpen}>{this.props.title}</Button>
         <Dialog
           modal={false}
           open={this.state.open}
@@ -240,26 +240,30 @@ export default class ContactEdit extends React.Component {
                     通道配置:
                 </td>
                 <td>
-                    <AutoComplete name="channels"
-                      openOnFocus={true}
-                      searchText={this.state.channels}
-                      onUpdateInput={this.channels_change}
-                      dataSource={this.state.channels_items}
-                      onNewRequest={this.channels_select}
-                    />
+                {
+                    // <AutoComplete name="channels"
+                    //   openOnFocus={true}
+                    //   searchText={this.state.channels}
+                    //   onUpdateInput={this.channels_change}
+                    //   dataSource={this.state.channels_items}
+                    //   onNewRequest={this.channels_select}
+                    // />
+                }
                 </td>
             </tr><tr>
                 <td>
                     <label>仪器型号:</label>
                 </td>
                 <td>
-                    <AutoComplete name="yiqixinghao"
-                      openOnFocus={true}
-                      searchText={this.state.yiqixinghao}
-                      onUpdateInput={this.yiqixinghao_change}
-                      dataSource={this.state.yiqixinghao_items}
-                      onNewRequest={this.yiqixinghao_select}
-                    />
+                {
+                    // <AutoComplete name="yiqixinghao"
+                    //   openOnFocus={true}
+                    //   searchText={this.state.yiqixinghao}
+                    //   onUpdateInput={this.yiqixinghao_change}
+                    //   dataSource={this.state.yiqixinghao_items}
+                    //   onNewRequest={this.yiqixinghao_select}
+                    // />
+                }
                 </td>
                 <td>
                     <label>仪器编号:</label>
@@ -301,20 +305,24 @@ export default class ContactEdit extends React.Component {
                     <label>入库时间:</label>
                 </td>
                 <td>
-                    <DatePicker  DateTimeFormat={DateTimeFormat} 
-                    locale="zh-Hans" hintText="yujifahuo_date" 
-                    onChange={this.yujifahuo_date_change} value={this.state.yujifahuo_date}
-                    />
+                {
+                    // <DatePicker  DateTimeFormat={DateTimeFormat} 
+                    // locale="zh-Hans" hintText="yujifahuo_date" 
+                    // onChange={this.yujifahuo_date_change} value={this.state.yujifahuo_date}
+                    // />
+                }
                 </td>
                 <td>
                     调试时间:
                 </td>
                 <td>
-                    <DatePicker   
-                    DateTimeFormat={DateTimeFormat} locale="zh-Hans" hintText="tiaoshi_date" 
-                    onChange={this.tiaoshi_date_change} 
-                    value={this.state.tiaoshi_date}
-                    />
+                {
+                    // <DatePicker   
+                    // DateTimeFormat={DateTimeFormat} locale="zh-Hans" hintText="tiaoshi_date" 
+                    // onChange={this.tiaoshi_date_change} 
+                    // value={this.state.tiaoshi_date}
+                    // />
+                }
                 </td>
             </tr><tr>
                 <td>
@@ -333,10 +341,12 @@ export default class ContactEdit extends React.Component {
             </tbody>
             </table>
            <div> 
-           <RaisedButton onTouchTap={this.handleSave} >保存</RaisedButton> 
-           <RaisedButton  onTouchTap={this.handleClear} >清除</RaisedButton> 
-           <RaisedButton onTouchTap={this.handleCopy} >复制</RaisedButton>
-           <UsePacks contact_id={this.state.id}/>
+           <Button raised  onClick={this.handleSave} >保存</Button> 
+           <Button raised  onClick={this.handleClear} >清除</Button> 
+           <Button raised onClick={this.handleCopy} >复制</Button>
+           {
+            //<UsePacks contact_id={this.state.id}/>
+            }
            </div>
         </Dialog>
         </div>

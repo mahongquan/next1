@@ -1,3 +1,4 @@
+import  ReactDOM from 'react-dom';
 import React, { Component } from 'react';
 //import './App.css';
 import  {Dialog,MuiThemeProvider} from './material-ui';///styles/MuiThemeProvider';
@@ -12,6 +13,8 @@ import ContactEdit from "./ContactEdit"
 import update from 'immutability-helper';
 //injectTapEventPlugin();
 //var user = "";
+var io = require("socket.io-client");
+var socket=io('http://localhost:8000');
 class App extends React.Component {
   mystate = {
     start:0,
@@ -80,6 +83,7 @@ class App extends React.Component {
   //   const newFoods = this.state.selectedFoods.concat(food);
   //   this.setState({ selectedFoods: newFoods });
   // }
+
   handleTest = () => {
     //const contact2=update(this.state.contacts[this.state.selected],{baoxiang: {$set: "test"}});
     // console.log("handleTest");
@@ -184,7 +188,7 @@ class App extends React.Component {
         showRemoveIcon: true,
       });
 
-      Client.contacts(value, (contacts) => {
+      socket.emit("/get/Contact",{search:value}, (contacts) => {
         this.setState({
           contacts: contacts.data, //.slice(0, MATCHING_ITEM_LIMIT),
         });
@@ -271,7 +275,13 @@ class App extends React.Component {
   openBaoxiang=()=>{
     this.setState({open:true});
   }
+  onSelectBaoxiang=(e) => {
+    this.setState({open:false,baoxiang:e});
+    this.mystate.baoxiang=e;
+    this.load_data();
+  }
   render() {
+    var classes={};
     var hasprev=true;
     var hasnext=true;
     let prev;
@@ -303,18 +313,38 @@ class App extends React.Component {
         <TableCell>{contact.yonghu}</TableCell>
         <TableCell>{contact.baoxiang}</TableCell>
         <TableCell>{contact.yiqixinghao}</TableCell>
-        <TableCell><Button onClick={()=>this.handleEdit(idx)}>编辑</Button></TableCell>
+        <TableCell>
+           <ContactEdit  title="编辑" contact={idx} parent={this}/>
+        </TableCell>
       </TableRow>
     ));
     return (
       <div className="App">
         <Toolbar>
-        <ContactEdit  title="编辑仪器信息" contact={this.state.selected} parent={this}/>
+       
           <input type="text" value={this.state.search}  placeholder="合同 or 仪器编号" onChange={this.handleSearchChange} />
           <Button  raised id="id_bt_search" className="btm btn-info" onClick={this.search}>搜索</Button>
          <Button  raised className="btn btn-primary" onClick={()=>this.handleEdit(null)}>新仪器</Button>
            <Button  raised>导入标样</Button>
          <div>过滤:</div>
+         <Button raised
+          ref={node => {
+            this.button = node;
+          }}
+          className={classes.button}
+          onClick={this.handleClickButton}
+        >
+        {this.state.baoxiang}
+        </Button>
+        <Menu id="simple-menu"
+          anchorEl={this.state.anchorEl}
+          open={this.state.open}
+          onRequestClose={this.handleRequestClose}>
+          <MenuItem onClick={() => this.onSelectBaoxiang("马红权")}>马红权</MenuItem>
+          <MenuItem onClick={() => this.onSelectBaoxiang("陈旺")}>陈旺</MenuItem>
+          <MenuItem onClick={() => this.onSelectBaoxiang("吴振宁")}>吴振宁</MenuItem>
+          <MenuItem onClick={() => this.onSelectBaoxiang("")}>*</MenuItem>
+       </Menu>
         </Toolbar>
         <Table>
             <TableHead>
