@@ -1,4 +1,9 @@
 import React from 'react';
+import AppBar from './material-ui/AppBar';
+import Toolbar from './material-ui/Toolbar';
+import IconButton from './material-ui/IconButton';
+import Typography from './material-ui/Typography';
+import CloseIcon from './material-ui-icons/Close';
 import Dialog from './material-ui/Dialog';
 import Button from './material-ui/Button';
 import TextField from './material-ui/TextField';
@@ -189,6 +194,9 @@ export default class ContactEdit extends React.Component {
         id:"",
     })
   };
+  handleRequestClose=()=>{
+    this.setState({open:false});
+  }
   tiaoshi_date_change=(e,d)=>{
     this.setState({tiaoshi_date:d});
   }
@@ -206,13 +214,21 @@ export default class ContactEdit extends React.Component {
     return (
       <div>
         <Button raised onClick={this.handleOpen}>{this.props.title}</Button>
-        <Dialog
+        <Dialog fullScreen
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
           contentStyle={customContentStyle}
           autoScrollBodyContent={true}
         >
+            <Toolbar>
+              <IconButton color="blue" onClick={this.handleRequestClose} aria-label="Close">
+                <CloseIcon />
+              </IconButton>
+              <Typography type="title" color="inherit">
+                {this.props.title}
+              </Typography>
+            </Toolbar>
             <table>
             <tbody>
             <tr >
