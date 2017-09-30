@@ -1,11 +1,59 @@
-
+import Autosuggest from 'react-autosuggest';
 import React from 'react';
 import Client from './Client';
-import {Table} from "react-bootstrap";
+import Table from './material-ui';
 import PackItemEdit from './PackItemEdit_mu';
 import update from 'immutability-helper';
-import AutoComplete from 'material-ui/AutoComplete';
+//import AutoComplete from './material-ui/AutoComplete';
+let styles = {
+  item: {
+    color:"green",
+    padding: '2px 6px',
+    cursor: 'default'
+  },
+
+  highlightedItem: {
+    color: 'white',
+    background: 'hsl(200, 50%, 50%)',
+    padding: '2px 6px',
+    cursor: 'default'
+  },
+
+  menu: {
+    border: 'solid 1px #ccc'
+  }
+}
 class PackItems extends React.Component {
+   auto_select=(event,data) => {
+      console.log("selected");
+      console.log(data)
+      this.addrow(data.suggestion.id);
+      //this.setState({auto_value:value, auto_items: [ item ] })
+  }
+  auto_change=(data)=>{
+    var value=data.value;
+    console.log("auto_change");
+    console.log(data);
+    if (value.length>1)
+    {
+      Client.get("/Item",{search:value} ,(items) => {
+          console.log(items);
+          this.setState({ auto_items: items.data, auto_loading: false })
+      });
+    }
+  };
+  renderitems=(item, {isHighlighted}) => {
+    console.log("renderitems==========");
+    console.log(item);
+    console.log(isHighlighted);
+    var r=(<div
+              style={isHighlighted ? styles.highlightedItem : styles.item}
+              key={item.id}
+            >{item.id}_{item.name}</div>
+          )
+    console.log(r)
+    return r;
+  }
   state = {
     items: [],
     showRemoveIcon: false,
@@ -21,28 +69,6 @@ class PackItems extends React.Component {
           items: items.data,//.slice(0, MATCHING_ITEM_LIMIT),
         });
       });
-  };
-  auto_select=(data) => {
-      console.log("selected");
-      this.addrow(data.value);
-      this.setState({auto_value:data.text})
-  }
-  auto_change=(value)=>{
-    console.log("auto_change");
-    if (value.length>1)
-    {
-      this.setState({ auto_value:value, auto_loading: true });
-      Client.get("/rest/Item",{query:value} ,(items) => {
-          var r=[]
-          for (var i in items.data){
-              r.push({text:items.data[i].name,value:items.data[i].id});
-          }
-          this.setState({ auto_items: r, auto_loading: false })
-      });
-    }
-    else{
-      this.setState({ auto_value:value, auto_loading: false });
-    };
   };
   new_packitem= (id) => {
     var url="/rest/BothPackItem";
@@ -84,7 +110,17 @@ class PackItems extends React.Component {
         this.setState({ items: filteredFoods });
     });
   };
+  onChange=(event, newValue)=>{
+    console.log(newValue);
+    this.setState({auto_value:newValue.newValue});
+  }
+   handleSuggestionsClearRequested = () => {
+    this.setState({
+      auto_items: [],
+    });
+  }
   render() {
+    console.log(this.state);
     const { items } = this.state;
     const itemRows = items.map((item, idx) => (
       <tr
@@ -105,7 +141,7 @@ class PackItems extends React.Component {
 
     return (
     <div>
-        <Table  responsive bordered condensed>
+        <table >
           <thead>
              <tr>
               <td>id</td>
@@ -120,13 +156,16 @@ class PackItems extends React.Component {
           <tbody>
             {itemRows}
           </tbody>
-        </Table>
-        输入备件<AutoComplete id="id2"
-          openOnFocus={true}
-          searchText={this.state.auto_value}
-          onUpdateInput={this.auto_change}
-          dataSource={this.state.auto_items}
-          onNewRequest={this.auto_select}
+        </table>
+        输入备件<Autosuggest
+          inputProps={{ id: 'states-autocomplete',value:this.state.auto_value,onChange:this.onChange}}
+          onSuggestionSelected={this.auto_select}
+          onSuggestionsFetchRequested={this.auto_change}
+          onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+          getSuggestionValue={(item) => item.name}
+          ref="autocomplete"
+          suggestions={this.state.auto_items}
+          renderSuggestion={this.renderitems}
         />
       <p>新备件名称：
         <input id="new_pack1"  placeholder="新备件" value={this.state.newPackName} onChange={this.newpackChange}/>

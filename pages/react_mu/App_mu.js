@@ -6,7 +6,7 @@ import {Divider, Button,TextField, Popover,Menu,MenuItem,Toolbar} from './materi
 //import { Toolbar, ToolbarGroup, ToolbarTitle } from 'material-ui/Toolbar';
 //import { Table, TableBody, TableHeader, TableCell, TableRow, TableCell } from 'material-ui/Table';
 import {List,ListItem,ListItemIcon,ListItemText, Radio, Grid, RadioGroup,FormControl, FormLabel, FormControlLabel,withStyles,Typography, Table, TableBody, TableHead, TableCell, TableRow } from './material-ui';
-import Client from './Client';
+//import Client from './Client';
 //import DialogExampleSimple from "./DialogExampleSimple"
 //import DialogImportStandard from "./DialogImportStandard"
 import ContactEdit from "./ContactEdit"
@@ -144,28 +144,28 @@ class App extends React.Component {
     };
     this.onLoginSubmit(data);
   };
-  handleLogin = () => {
-    console.log("login");
-    Client.login_index((data) => {
-      //console.log(data.csrf_token);
-      // const cookies = new Cookies();
+  // handleLogin = () => {
+  //   console.log("login");
+  //   Client.login_index((data) => {
+  //     //console.log(data.csrf_token);
+  //     // const cookies = new Cookies();
 
-      // cookies.set('csrftoken', this.state.csrf_token, { path: '/' });
-      this.showlogin();
-    });
+  //     // cookies.set('csrftoken', this.state.csrf_token, { path: '/' });
+  //     this.showlogin();
+  //   });
 
-  };
-  handleLogout = () => {
-    console.log("logout");
-    Client.logout((data) => {
-      console.log("logout" + data);
-      this.setState({
-        logined: false,
-        user: "AnonymousUser",
-      });
-      this.handleUserChange(this.state.user);
-    });
-  };
+  // };
+  // handleLogout = () => {
+  //   console.log("logout");
+  //   Client.logout((data) => {
+  //     console.log("logout" + data);
+  //     this.setState({
+  //       logined: false,
+  //       user: "AnonymousUser",
+  //     });
+  //     this.handleUserChange(this.state.user);
+  //   });
+  // };
   handleRequestClose = () => {
     this.setState({
       open: false,
@@ -195,20 +195,20 @@ class App extends React.Component {
       });
     }
   };
-  onLoginSubmit= (data) => {
-    console.log(data);
-    Client.login(data.username, data.password, (res) => {
-      if (res.success) {
-        this.setState({
-          logined: true,
-        });
-        this.setState({
-          user: data.username
-        });
-        this.handleUserChange(this.state.user);
-      }
-    });
-  };
+  // onLoginSubmit= (data) => {
+  //   console.log(data);
+  //   Client.login(data.username, data.password, (res) => {
+  //     if (res.success) {
+  //       this.setState({
+  //         logined: true,
+  //       });
+  //       this.setState({
+  //         user: data.username
+  //       });
+  //       this.handleUserChange(this.state.user);
+  //     }
+  //   });
+  // };
   inputChange=(e)=>{
     console.log(this.refs.input);
     console.log(this.refs.style);
@@ -281,6 +281,7 @@ class App extends React.Component {
     this.load_data();
   }
   render() {
+    console.log(socket);
     var classes={};
     var hasprev=true;
     var hasnext=true;
@@ -314,7 +315,7 @@ class App extends React.Component {
         <TableCell>{contact.baoxiang}</TableCell>
         <TableCell>{contact.yiqixinghao}</TableCell>
         <TableCell>
-           <ContactEdit  title="编辑" contact={idx} parent={this}/>
+           <ContactEdit  title="编辑" socket={socket} contact={idx} parent={this}/>
         </TableCell>
       </TableRow>
     ));

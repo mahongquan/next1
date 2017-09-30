@@ -1,23 +1,21 @@
 import React from 'react';
-import Dialog from 'material-ui/Dialog';
+import Dialog from './material-ui/Dialog';
 import update from 'immutability-helper';
 import Client from './Client';
-var createReactClass = require('create-react-class');
-const PackItemEdit = createReactClass({
-  getInitialState() {
-    return { 
+//var createReactClass = require('create-react-class');
+class PackItemEdit extends React.Component{
+  state={ 
       open: false,
       packitem:{},
       hiddenPacks:true,
       bg:{},
       date_open:false,
-    };
-  },
+  }
 
-  handleClose  () {
+  handleClose=()=>{
     this.setState({open: false});
-  },
-  handleOpen() {
+  }
+  handleOpen=()=>{
     this.setState({ open: true });
     console.log("packitemedit open");
     console.log(this.props.index);
@@ -29,8 +27,8 @@ const PackItemEdit = createReactClass({
       this.old=this.parent.state.items[this.props.index];
     }
     this.setState({packitem:this.old});
-  },
-  handleSave (data) {
+  }
+  handleSave=(data)=>{
     var url="/rest/BothPackItem";
     var self=this;
     Client.postOrPut(url,this.state.packitem,(res) => {
@@ -42,8 +40,8 @@ const PackItemEdit = createReactClass({
         self.old=res.data;
         self.handleClose();
     });
-  },
-  handleChange(e){
+  }
+  handleChange=(e)=>{
     console.log("change");
     console.log(e);
     console.log(e.target.value);
@@ -64,14 +62,14 @@ const PackItemEdit = createReactClass({
     const contact2=update(this.state.packitem,{[e.target.name]: {$set:e.target.value}});
     console.log(contact2);
     this.setState({packitem:contact2});
-  },
-  render() {
+  }
+  render=()=>{
      const customContentStyle = {
       width: '100%',
       maxWidth: 'none',
     };
     return (
-        <a onTouchTap={this.handleOpen}>{this.props.title}
+        <a onClick={this.handleOpen}>{this.props.title || "notitle"}
         <Dialog
           modal={false}
           open={this.state.open}
@@ -127,5 +125,5 @@ const PackItemEdit = createReactClass({
         </a>
     );
   }
-});
+}
 export default PackItemEdit;

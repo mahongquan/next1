@@ -7,27 +7,25 @@ import CloseIcon from './material-ui-icons/Close';
 import Dialog from './material-ui/Dialog';
 import Button from './material-ui/Button';
 import TextField from './material-ui/TextField';
-import Client from './Client';
-//import UsePacks from './UsePacks';
-//import AutoComplete from './material-ui/AutoComplete';
-//import DatePicker from './material-ui/DatePicker';
-import areIntlLocalesSupported from 'intl-locales-supported';
+import Autosuggest from 'react-autosuggest';
 import update from 'immutability-helper';
-let DateTimeFormat;
-if (areIntlLocalesSupported( ['zh-Hans'])) {
-  var date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
-  DateTimeFormat = global.Intl.DateTimeFormat;
-  console.log(new DateTimeFormat('zh-Hans').format(date));
-} else {
-  console.log("intl");
-  const IntlPolyfill = require('intl');
-  DateTimeFormat = IntlPolyfill.DateTimeFormat;
-  require('intl/locale-data/jsonp/zh-Hans');
-}
-console.log(DateTimeFormat());
-function toDateStr(d){
-  var m=d.getMonth()+1;
-  return d.getFullYear()+"-"+m+"-"+d.getDate()
+let styles = {
+  item: {
+    color:"green",
+    padding: '2px 6px',
+    cursor: 'default'
+  },
+
+  highlightedItem: {
+    color: 'white',
+    background: 'hsl(200, 50%, 50%)',
+    padding: '2px 6px',
+    cursor: 'default'
+  },
+
+  menu: {
+    border: 'solid 1px #ccc'
+  }
 }
 export default class ContactEdit extends React.Component {
   state = {
@@ -56,30 +54,22 @@ export default class ContactEdit extends React.Component {
       //this.addrow(data.value);
       this.setState({yiqixinghao:data});
   }
-  channels_change=(value)=>{
-  };
-  channels_select=(data) => {
-      console.log("selected");
-      console.log(data);
-      //this.addrow(data.value);
-      this.setState({channels:data});
-  }
   setdata=(contact)=>{
     console.log(contact);
-    var arr2 = contact.yujifahuo_date.split("-");
-    var date2 = new Date(arr2[0],parseInt(arr2[1],10)-1,arr2[2]); 
-    arr2 = contact.tiaoshi_date.split("-");
-    var date1 = new Date(arr2[0],parseInt(arr2[1],10)-1,arr2[2]); 
+    // var arr2 = contact.yujifahuo_date.split("-");
+    // var date2 = new Date(arr2[0],parseInt(arr2[1],10)-1,arr2[2]); 
+    // arr2 = contact.tiaoshi_date.split("-");
+    // var date1 = new Date(arr2[0],parseInt(arr2[1],10)-1,arr2[2]); 
     this.old=contact;
     this.setState({
         open:true,
-        yujifahuo_date:date2,
+        yujifahuo_date:contact.yujifahuo_date,
         yonghu:contact.yonghu,
         yiqixinghao:contact.yiqixinghao,
         addr:contact.addr,
         hetongbh:contact.hetongbh,
         shenhe:contact.shenhe,
-        tiaoshi_date:date1,
+        tiaoshi_date:contact.tiaoshi_date,
         id:contact.id,
         yiqibh:contact.yiqibh,
         baoxiang:contact.baoxiang,
@@ -158,15 +148,23 @@ export default class ContactEdit extends React.Component {
             break;
     }
   };
-  handleSave= (data) => {
-    var url="/rest/Contact";
-    let newdate;
-    let newdate2
-    newdate=toDateStr(this.state.yujifahuo_date);
-    newdate2=toDateStr(this.state.tiaoshi_date);
-    var data1=update(this.state,{tiaoshi_date:{$set:newdate2},yujifahuo_date:{$set:newdate}});
-
-    Client.postOrPut(url,data1,(res) => {
+  handleSave= () => {
+    let url;
+    if (this.state.id){
+      url="/put/Contact";
+    }
+    else{
+      url="/post/Contact";
+    }
+    // let newdate;
+    // let newdate2
+    // newdate=toDateStr(this.state.yujifahuo_date);
+    // newdate2=toDateStr(this.state.tiaoshi_date);
+    // var data1=update(this.state,{tiaoshi_date:{$set:newdate2},yujifahuo_date:{$set:newdate}});
+    console.log(url);
+    console.log(this.props);
+    this.props.socket.emit(url,this.state,(res) => {
+      console.log(res);
         this.setdata(res.data);
         this.setState({bg:{}});
         this.parent.handleContactChange(this.contact_idx,res.data);
@@ -203,8 +201,63 @@ export default class ContactEdit extends React.Component {
   yujifahuo_date_change=(e,d)=>{
     this.setState({yujifahuo_date:d});
   }
-
+  channels_change=(event, { newValue })=>{
+    this.change1(newValue);
+  }
+  channels_change_fetch=()=>{}
+  channels_select=(event,data)=>{
+    this.change1(data.suggestion);
+  }
+  change1=(item)=>{
+      console.log("selected");
+      console.log(item);
+      console.log(this.old);
+      if(this.old.channels===item)
+      {
+       const bg2=update(this.state.bg,{channels:{$set:"#ffffff"}})
+        this.setState({bg:bg2});
+      }
+      else{
+        const bg2=update(this.state.bg,{channels:{$set:"#8888ff"}})
+        this.setState({bg:bg2});
+      }
+      this.setState({channels:item});
+  }
+  yiqixinghao_change=(event, { newValue })=>{
+    this.change2(newValue);
+  }
+  yiqixinghao_select=(event,data)=>{
+    this.change2(data.suggestion);
+  }
+  change2=(item)=>{
+      console.log("selected");
+      console.log(item);
+      if(this.old.yiqixinghao===item)
+      {
+       const bg2=update(this.state.bg,{yiqixinghao:{$set:"#ffffff"}})
+        this.setState({bg:bg2});
+      }
+      else{
+        const bg2=update(this.state.bg,{yiqixinghao:{$set:"#8888ff"}})
+        this.setState({bg:bg2});
+      }
+      this.setState({yiqixinghao:item});
+  }
+  renderitems=(item, {isHighlighted}) => {
+    console.log("renderitems==========");
+    console.log(item);
+    console.log(isHighlighted);
+    var r=(<div
+              style={isHighlighted ? styles.highlightedItem : styles.item}
+              key={item}
+            >{item}</div>
+          )
+    console.log(r)
+    return r;
+  }
   render() {
+    console.log(this.props);
+    console.log(this.state);
     const customContentStyle = {
       width: '100%',
       maxWidth: 'none',
@@ -242,7 +295,10 @@ export default class ContactEdit extends React.Component {
                     <label>用户单位:</label>
                 </td>
                 <td>
-                    <TextField type="text" id="yonghu" name="yonghu" value={this.state.yonghu}  
+                    <TextField type="text" id="yonghu" name="yonghu" value={this.state.yonghu} 
+                    style={{
+                      backgroundColor: this.state.bg.yonghu,
+                    }} 
                     onChange={this.handleChange} />
                 </td>
             </tr><tr>
@@ -250,36 +306,75 @@ export default class ContactEdit extends React.Component {
                     客户地址:
                 </td>
                 <td>
-                    <TextField type="text" id="addr" name="addr" value={this.state.addr}  onChange={this.handleChange} /> 
+                    <TextField type="text" id="addr" name="addr" value={this.state.addr}  
+                    style={{
+                      backgroundColor: this.state.bg.addr,
+                    }}
+                    onChange={this.handleChange} /> 
                 </td>
                 <td>
                     通道配置:
                 </td>
                 <td>
-                {
-                    // <AutoComplete name="channels"
-                    //   openOnFocus={true}
-                    //   searchText={this.state.channels}
-                    //   onUpdateInput={this.channels_change}
-                    //   dataSource={this.state.channels_items}
-                    //   onNewRequest={this.channels_select}
-                    // />
-                }
+                      <Autosuggest
+                      inputProps={
+                        { 
+                          id: 'channels-autocomplete',
+                          style:{backgroundColor:this.state.bg.channels},
+                          value:this.state.channels,
+                          onChange:this.channels_change
+                        }
+                      }
+                      suggestions={[
+                        "1O(低氧)",
+                        "1O(高氧)",
+                        "1O(低氧)+2N",
+                        "1C(低碳)+2S",
+                        "1C(高碳)+2S",
+                        "2C+1S(低硫)",
+                        "2C+1S(高硫)",
+                        "2C+2S",
+                        "2O+2N",
+                        "2O",
+                      ]}
+                      getSuggestionValue={(item) => item}
+                      onSuggestionSelected={this.channels_select}
+                      onSuggestionsFetchRequested={()=>{}}
+                      renderSuggestion={this.renderitems}
+                    />
                 </td>
             </tr><tr>
                 <td>
                     <label>仪器型号:</label>
                 </td>
                 <td>
-                {
-                    // <AutoComplete name="yiqixinghao"
-                    //   openOnFocus={true}
-                    //   searchText={this.state.yiqixinghao}
-                    //   onUpdateInput={this.yiqixinghao_change}
-                    //   dataSource={this.state.yiqixinghao_items}
-                    //   onNewRequest={this.yiqixinghao_select}
-                    // />
-                }
+                <Autosuggest
+                       inputProps={
+                        { 
+                          id: 'yiqixinghao-autocomplete',
+                          style:{backgroundColor:this.state.bg.yiqixinghao},
+                          value:this.state.yiqixinghao,
+                          onChange:this.yiqixinghao_change
+                        }
+                      }
+                      suggestions={[
+                        "CS-1011C",
+                        "CS-2800",
+                        "CS-3000",
+                        "CS-3000G",
+                        "HD-5",
+                        "N-3000",
+                        "O-3000",
+                        "OH-3000",
+                        "ON-3000",
+                        "ON-4000",
+                        "ONH-3000"
+                      ]}
+                      getSuggestionValue={(item) => item}
+                      onSuggestionsFetchRequested={()=>{}}
+                      onSuggestionSelected={this.yiqixinghao_select}
+                      renderSuggestion={this.renderitems}
+                    />
                 </td>
                 <td>
                     <label>仪器编号:</label>
@@ -288,7 +383,7 @@ export default class ContactEdit extends React.Component {
                     <TextField type="text" 
                     id="yiqibh" name="yiqibh" 
                     value={this.state.yiqibh} onChange={this.handleChange} 
-                    inputStyle={{
+                    style={{
                       backgroundColor: this.state.bg.yiqibh,
                     }}
                     />
@@ -300,7 +395,7 @@ export default class ContactEdit extends React.Component {
                 <td>
                     <TextField type="text" id="baoxiang" name="baoxiang" value={this.state.baoxiang}  
                     onChange={this.handleChange} 
-                    inputStyle={{
+                    style={{
                       backgroundColor: this.state.bg.baoxiang,
                     }}
                     />
@@ -311,7 +406,7 @@ export default class ContactEdit extends React.Component {
                 <td>
                     <TextField  id="shenhe" 
                     name="shenhe" value={this.state.shenhe} onChange={this.handleChange}  
-                    inputStyle={{
+                    style={{
                       backgroundColor: this.state.bg.shenhe,
                     }}
                     />
@@ -321,37 +416,56 @@ export default class ContactEdit extends React.Component {
                     <label>入库时间:</label>
                 </td>
                 <td>
-                {
-                    // <DatePicker  DateTimeFormat={DateTimeFormat} 
-                    // locale="zh-Hans" hintText="yujifahuo_date" 
-                    // onChange={this.yujifahuo_date_change} value={this.state.yujifahuo_date}
-                    // />
-                }
+                <TextField
+                  id="yujifahuo_date"
+                  style={{
+                      backgroundColor: this.state.bg.yujifahuo_date,
+                    }}
+                  type="date"
+                  defaultValue={this.state.yujifahuo_date}
+                  onChange={this.handleChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
                 </td>
                 <td>
                     调试时间:
                 </td>
                 <td>
-                {
-                    // <DatePicker   
-                    // DateTimeFormat={DateTimeFormat} locale="zh-Hans" hintText="tiaoshi_date" 
-                    // onChange={this.tiaoshi_date_change} 
-                    // value={this.state.tiaoshi_date}
-                    // />
-                }
+                <TextField
+                  id="tiaoshi_date"
+                  style={{
+                      backgroundColor: this.state.bg.tiaoshi_date,
+                    }}
+                  type="date"
+                  defaultValue={this.state.tiaoshi_date}
+                  onChange={this.handleChange}
+                  InputLabelProps={{
+                    shrink: true,
+                  }}
+                />
                 </td>
             </tr><tr>
                 <td>
                     <label>合同编号:</label>
                 </td>
                 <td>
-                    <TextField type="text" id="hetongbh" name="hetongbh" value={this.state.hetongbh} onChange={this.handleChange}  />
+                    <TextField 
+                    style={{
+                      backgroundColor: this.state.bg.hetongbh,
+                    }}
+                    type="text" id="hetongbh" name="hetongbh" value={this.state.hetongbh} onChange={this.handleChange}  />
                 </td>
                 <td>
                     方法:
                 </td>
                 <td>
-                <TextField type="text" id="method" name="method"   disabled={true} value={this.state.method} />
+                <TextField 
+                style={{
+                      backgroundColor: this.state.bg.method,
+                    }}
+                type="text" id="method" name="method"   disabled={true} value={this.state.method} />
                 </td>
             </tr>        
             </tbody>
