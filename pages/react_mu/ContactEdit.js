@@ -9,6 +9,7 @@ import Button from './material-ui/Button';
 import TextField from './material-ui/TextField';
 import Autosuggest from 'react-autosuggest';
 import update from 'immutability-helper';
+import UsePacks from "./UsePacks";
 let styles = {
   item: {
     color:"green",
@@ -255,6 +256,9 @@ export default class ContactEdit extends React.Component {
     console.log(r)
     return r;
   }
+  onSuggestionsClearRequested=()=>{
+    //this.setState({});
+  }
   render() {
     console.log(this.props);
     console.log(this.state);
@@ -337,6 +341,7 @@ export default class ContactEdit extends React.Component {
                         "2O+2N",
                         "2O",
                       ]}
+                      onSuggestionsClearRequested={this.onSuggestionsClearRequested}
                       getSuggestionValue={(item) => item}
                       onSuggestionSelected={this.channels_select}
                       onSuggestionsFetchRequested={()=>{}}
@@ -474,9 +479,7 @@ export default class ContactEdit extends React.Component {
            <Button raised  onClick={this.handleSave} >保存</Button> 
            <Button raised  onClick={this.handleClear} >清除</Button> 
            <Button raised onClick={this.handleCopy} >复制</Button>
-           {
-            //<UsePacks contact_id={this.state.id}/>
-            }
+            <UsePacks contact_id={this.state.id}/>
            </div>
         </Dialog>
         </div>

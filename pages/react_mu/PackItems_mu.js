@@ -126,14 +126,15 @@ class PackItems extends React.Component {
       <tr
         key={idx}
       >
-        <td >{item.id}</td>
-        <td >{item.name}</td>
-        <td>{item.guige}</td>
+       <td >{item.id}</td>
+        <td >{item.Item.name}</td>
+        <td>{item.Item.guige}</td>
         <td>{item.ct}</td>
-        <td>{item.bh}</td>
+        <td>{item.Item.bh}</td>
         <td  hidden={this.state.release}>{item.pack}</td>
+        <td><input type="checkbox" disabled="disabled" name="quehuo" defaultChecked={item.quehuo}  /></td>
         <td>
-        <PackItemEdit parent={this} index={idx} title="编辑" />
+        <a onClick={()=>this.handleEdit(idx)}>编辑</a>
         <a style={{marginLeft:"10px"}} onClick={() => this.onDeleteClick(idx)}>删除</a>
         </td>
       </tr>
@@ -144,12 +145,13 @@ class PackItems extends React.Component {
         <table >
           <thead>
              <tr>
-              <td>id</td>
+               <td>id</td>
               <td>名称</td>
               <td>规格</td>
               <td>数量</td>
               <td>编号</td>
               <td  hidden={this.state.release}>pack</td>
+              <td>缺货</td>
               <td>操作</td>
             </tr>
           </thead>

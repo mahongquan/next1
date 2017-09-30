@@ -1,9 +1,28 @@
 
 import React from 'react';
 import Client from './Client';
-import {Table, TableBody, TableRowColumn,  TableRow, } from 'material-ui/Table';
-import AutoComplete from 'material-ui/AutoComplete';
+import {Table, TableBody, TableCell,  TableRow, } from './material-ui';
+//import AutoComplete from 'material-ui/AutoComplete';
+import Autosuggest from 'react-autosuggest';
 import UsePackEdit from "./UsePackEdit_mu";
+let styles = {
+  item: {
+    color:"green",
+    padding: '2px 6px',
+    cursor: 'default'
+  },
+
+  highlightedItem: {
+    color: 'white',
+    background: 'hsl(200, 50%, 50%)',
+    padding: '2px 6px',
+    cursor: 'default'
+  },
+
+  menu: {
+    border: 'solid 1px #ccc'
+  }
+}
 class UsePacks extends React.Component {
   state = {
     usepacks: [],
@@ -60,34 +79,9 @@ class UsePacks extends React.Component {
       searchValue: '',
     });
   };
-  auto_change=(value)=>{
-    console.log("auto_change");
-    var self=this;
-    if (value.length>1)
-    {
-      this.setState({ auto_value:value });
-      Client.get("/rest/Pack",{search:value} ,(items) => {
-          console.log(items.data);
-          var r=[]
-          for (var i in items.data){
-              r.push({text:items.data[i].name,value:items.data[i].id});
-          }
-          self.setState({ auto_items: r})
-      });
-    }
-    else{
-      this.setState({ auto_value:value});
-    };
-  };
-  auto_select=(data) => {
-      console.log("selected");
-      console.log(data);
-      this.addrow(data.value);
-      //this.setState({auto_value:data.text)
-  }
   bibei= (id) => {
-    //this.setState({auto_value:"必备"});
-    this.auto_change("必备");
+    this.setState({auto_value:"必备"});
+    //this.auto_change("必备");
   };
   new_pack= (id) => {
     var url="/rest/UsePackEx";
@@ -99,12 +93,14 @@ class UsePacks extends React.Component {
     });
   };
   addrow=(pack_id)=>{
-    var url="/rest/UsePack";
-    var data={contact:this.props.contact_id,pack:pack_id};
+    console.log("addrow=");
+    var url="/UsePack";
+    var data={contact_id:this.props.contact_id,pack_id:pack_id};
+    console.log(data);
     Client.postOrPut(url,data,(res) => {
         var p=res.data;
-        const newusepacks = this.state.usepacks.concat(p);
-        this.setState({ usepacks: newusepacks });
+        const newFoods = this.state.usepacks.concat(p);
+        this.setState({ usepacks: newFoods });
     });
   };
   newpackChange=(e)=>{
@@ -113,7 +109,7 @@ class UsePacks extends React.Component {
   onEditClick = (id) => {
   };
   onDeleteClick = (itemIndex) => {
-    var url="/rest/UsePack";
+    var url="/UsePack";
     Client.delete1(url,{id:this.state.usepacks[itemIndex].id},(res) => {
         const filteredusepacks = this.state.usepacks.filter(
           (item, idx) => itemIndex !== idx,
@@ -121,19 +117,56 @@ class UsePacks extends React.Component {
         this.setState({ usepacks: filteredusepacks });
     });
   };
+  onChange=(event, newValue)=>{
+    console.log(newValue);
+    this.setState({auto_value:newValue.newValue});
+  }
+  auto_select=(event,data) => {
+      console.log("selected");
+      console.log(data)
+      this.addrow(data.suggestion.id);
+      //this.setState({auto_value:value, auto_items: [ item ] })
+  }
+  auto_change=(data)=>{
+    var value=data.value;
+    console.log("auto_change");
+    console.log(data);
+    if (value.length>1)
+    {
+      Client.get("/Pack",{search:value} ,(items) => {
+          console.log(items);
+          this.setState({ auto_items: items.data, auto_loading: false })
+      });
+    }
+  };
+  handleSuggestionsClearRequested = () => {
+    this.setState({
+      auto_items: [],
+    });
+  }
+  renderitems=(item, {isHighlighted}) => {
+    console.log("renderitems==========");
+    console.log(item);
+    console.log(isHighlighted);
+    var r=(<div
+              style={isHighlighted ? styles.highlightedItem : styles.item}
+              key={item.id}
+            >{item.id}_{item.name}</div>
+          )
+    console.log(r)
+    return r;
+  }
   render() {
+    console.log(this.state);
     const { usepacks } = this.state;
     const foodRows = usepacks.map((food, idx) => (
-      <TableRow key={idx} onClick={() => this.props.onFoodClick(food)}>
-        <TableRowColumn>{food.id}</TableRowColumn>
-        <TableRowColumn>{food.name}</TableRowColumn>
-        <TableRowColumn>{food.contact}</TableRowColumn>
-        <TableRowColumn>{food.pack}</TableRowColumn>
-        <TableRowColumn>{food.hetongbh}</TableRowColumn>
-        <TableRowColumn>
+      <TableRow key={idx}>
+        <TableCell>{food.id}</TableCell>
+        <TableCell>{food.Pack.name}</TableCell>
+        <TableCell>
         <UsePackEdit parent={this} index={idx} title="编辑" />
         <a  onClick={() => this.onDeleteClick(idx)} style={{marginLeft:"10px"}}>删除</a>
-        </TableRowColumn>
+        </TableCell>
       </TableRow>
     ));
 
@@ -142,22 +175,22 @@ class UsePacks extends React.Component {
         <Table>
         <TableBody>
         <TableRow>
-          <TableRowColumn>id</TableRowColumn>
-          <TableRowColumn>name</TableRowColumn>
-          <TableRowColumn>contact</TableRowColumn>
-          <TableRowColumn>pack</TableRowColumn>
-          <TableRowColumn>hetongbh</TableRowColumn>
-          <TableRowColumn>actions</TableRowColumn>
+          <TableCell>id</TableCell>
+          <TableCell>name</TableCell>
+          <TableCell>actions</TableCell>
         </TableRow>
         {foodRows}
         </TableBody>
         </Table>
-        <div>输入包<AutoComplete id="id1"
-          openOnFocus={true}
-          searchText={this.state.auto_value}
-          onUpdateInput={this.auto_change}
-          dataSource={this.state.auto_items}
-          onNewRequest={this.auto_select}
+        <div>输入包<Autosuggest
+          inputProps={{ id: 'states-autocomplete',value:this.state.auto_value,onChange:this.onChange}}
+          onSuggestionSelected={this.auto_select}
+          onSuggestionsFetchRequested={this.auto_change}
+          onSuggestionsClearRequested={this.handleSuggestionsClearRequested}
+          getSuggestionValue={(item) => item.name}
+          ref="autocomplete"
+          suggestions={this.state.auto_items}
+          renderSuggestion={this.renderitems}
         />
           <button  className="btn" onClick={this.bibei}>必备</button>
         </div>
