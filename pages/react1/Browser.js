@@ -1,5 +1,5 @@
 import React from 'react';
-import './react-contextmenu.css'
+//import './react-contextmenu.css'
 import { ContextMenu, MenuItem, ContextMenuTrigger } from "./contextmenu2";
 import Client from "./Client";
 //var createReactClass = require('create-react-class');
