@@ -5,7 +5,7 @@ class Index extends React.Component{
 	render=()=>{
 		return(<div>
 			<Head>
-			  <title>2048</title>
+			  <title>reactbootstrap parts</title>
 		      <meta httpEquiv="content-type" content="text/html;charset=utf-8" />
 		      <link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css" />
 	    	  <link rel="stylesheet" type="text/css" href="/static/bootstrap-theme.min.css" />
