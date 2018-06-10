@@ -4,18 +4,17 @@ import React, { Component } from 'react';
 import {Navbar,Nav,NavItem,MenuItem,DropdownButton} from "react-bootstrap";
 import update from 'immutability-helper';
 import Client from './Client';
-import ExampleModal from './ExampleModal';
+//import ExampleModal from './ExampleModal';
 import ContactEdit2New from './ContactEdit2New';
 import DlgWait from './DlgWait';
 import DlgFolder from './DlgFolder';
-import DlgFolder2 from './DlgFolder2';
+//import DlgFolder2 from './DlgFolder2';
 import DlgStat from './DlgStat';
 import DlgImport from './DlgImport';
 import DlgCheck from './DlgCheck'
 import DlgUrl from './DlgUrl';
 import DlgCopyPack from './DlgCopyPack';
 import DlgItems from './DlgItems';
-import DlgPacks from './DlgPacks';
 var host="";
 class App extends Component {
   mystate = {
@@ -28,14 +27,12 @@ class App extends Component {
   }
    state = {
     contacts: [],
-    limit:10,
     user: "AnonymousUser",
     start:0,
     total:0,
     search:"",
     start_input:1,
     currentIndex:null,
-    baoxiang:"",
   }
   componentDidMount=() => {
     this.load_data();
@@ -55,7 +52,6 @@ class App extends Component {
         this.mystate.total=contacts.total;//because async ,mystate set must before state;
         this.setState({
           contacts: contacts.data, //.slice(0, MATCHING_ITEM_LIMIT),
-          limit:this.mystate.limit,
           user: user,
           total:contacts.total,
           start:this.mystate.start
@@ -198,7 +194,10 @@ class App extends Component {
          <DlgWait contact_id={contact.id} title="全部文件" />
          <DlgCheck contact_id={contact.id} title="核对备料计划" />
         <DlgFolder contact_id={contact.id} title="资料文件夹" />
-      <DlgFolder2 contact_id={contact.id} initpath={"仪器资料/"+contact.yiqibh} title="资料文件夹2" />
+    
+    { 
+      //<DlgFolder2 contact_id={contact.id} initpath={"仪器资料/"+contact.yiqibh} title="资料文件夹2" />
+    }
                 </div>
         </td>
       </tr>
@@ -238,7 +237,6 @@ class App extends Component {
     </Navbar.Header>
     <Nav>
       <NavItem eventKey={1} href="#">合同</NavItem>
-      <DlgPacks />
       <DlgItems />
       <DlgCopyPack />
       <DlgStat />
@@ -248,14 +246,16 @@ class App extends Component {
     <tbody>
     <tr>
    <td>
-     <DropdownButton title={this.state.user} id="id_dropdown1">
-        <li hidden={this.state.user!=="AnonymousUser"}>
-          <ExampleModal onLoginSubmit={this.onLoginSubmit} title="登录" />
-        </li>
-        <li  hidden={this.state.user==="AnonymousUser"} >
-          <a onClick={this.handleLogout}>注销</a>
-        </li>
-     </DropdownButton>
+   {
+     // <DropdownButton title={this.state.user} id="id_dropdown1">
+     //    <li hidden={this.state.user!=="AnonymousUser"}>
+     //      <ExampleModal onLoginSubmit={this.onLoginSubmit} title="登录" />
+     //    </li>
+     //    <li  hidden={this.state.user==="AnonymousUser"} >
+     //      <a onClick={this.handleLogout}>注销</a>
+     //    </li>
+     // </DropdownButton>
+   }
   </td>
   <td>
         <input type="text" value={this.state.search}  placeholder="合同 or 仪器编号" onChange={this.handleSearchChange} />
@@ -270,8 +270,7 @@ class App extends Component {
         <DlgImport/>
   </td>
    <td>
-   <label>过滤</label>
-    <DropdownButton title={this.state.baoxiang} id="id_dropdown2">
+    <DropdownButton title="过滤" id="id_dropdown2">
       <MenuItem onSelect={() => this.onSelectBaoxiang("马红权")}>马红权</MenuItem>
       <MenuItem onSelect={() => this.onSelectBaoxiang("陈旺")}>陈旺</MenuItem>
       <MenuItem onSelect={() => this.onSelectBaoxiang("吴振宁")}>吴振宁</MenuItem>
