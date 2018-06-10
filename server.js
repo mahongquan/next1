@@ -1,4 +1,8 @@
+
 var models = require("./models");
+const Op = models.Sequelize.Op;
+
+
 const express = require('express')
 const next = require('next')
 var ss = require('socket.io-stream');
@@ -178,26 +182,26 @@ socket.on('/get/Contact', async function( data, callback ) {
   if (search != "") {
     if (baoxiang != "") {
       w = {
-        $or: {
+        [Op.or]: {
           yiqibh: {
-            $like: "%" + search + "%"
+            [Op.like]: "%" + search + "%"
           },
           hetongbh: {
-            $like: "%" + search + "%"
+            [Op.like]: "%" + search + "%"
           },
         },
         baoxiang: {
-          $like: "%" + baoxiang + "%"
+          [Op.like]: "%" + baoxiang + "%"
         }
       };
     } else {
       w = {
-        $or: {
+        [Op.or]: {
           yiqibh: {
-            $like: "%" + search + "%"
+            [Op.like]: "%" + search + "%"
           },
           hetongbh: {
-            $like: "%" + search + "%"
+            [Op.like]: "%" + search + "%"
           },
         }
       };
@@ -206,7 +210,7 @@ socket.on('/get/Contact', async function( data, callback ) {
     if (baoxiang != "") {
       w = {
         baoxiang: {
-          $like: "%" + baoxiang + "%"
+          [Op.like]: "%" + baoxiang + "%"
         }
       };
     } else {
@@ -443,7 +447,7 @@ socket.on('/get/Pack', async function( data, callback ) {
   if (search && search != "") {
     w = {
       name: {
-        $like: "%" + search + "%"
+        [Op.like]: "%" + search + "%"
       },
     };
   } else {
@@ -495,7 +499,7 @@ socket.on('/get/Item', async function( data, callback ) {
   if (search && search != "") {
     w = {
       name: {
-        $like: "%" + search + "%"
+        [Op.like]: "%" + search + "%"
       },
     };
   } else {
