@@ -15,7 +15,7 @@
     "immutability-helper": "^2.6.4",
     "material-ui": "^1.0.0-beta.43",
     "moment": "^2.20.1",
-    "next": "^6.0.3",
+    "next": "^7.0.2",
     "react": "^16.4.0",
     "react-bootstrap": "^0.32.1",
     "react-chartjs-2": "^2.7.0",
@@ -27,7 +27,7 @@
     "sequelize": "^4.37.10",
     "socket.io": "^2.1.1",
     "socket.io-stream": "^0.9.1",
-    "sqlite3": "^4.0.0",
+    "sqlite3": "^4.0.3",
     "xlsx":"^0.13.0"
   }
 }

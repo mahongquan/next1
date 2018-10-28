@@ -120,7 +120,7 @@ class PackItems extends React.Component {
     ));
     return (
     <div>
-        <Table  responsive bordered condensed>
+        <Table  bordered>
           <thead>
              <tr>
               <td>id</td>
