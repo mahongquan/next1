@@ -1,4 +1,4 @@
-export default () => (
+const Name1= () => (
   <div>
    <style jsx global>{`
       body {
@@ -18,3 +18,4 @@ export default () => (
     `}</style>
   </div>
 )
+export default Name1;
