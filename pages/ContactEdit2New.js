@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import UsePacks2 from "./UsePacks2";
-import Modal from "./MyModal";
+import { Modal} from 'react-bootstrap';
 import update from 'immutability-helper';
 import Client from './Client';
 import Autocomplete from './Autocomplete.js';
