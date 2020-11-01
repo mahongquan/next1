@@ -5,13 +5,8 @@ class Index extends React.Component{
 	render=()=>{
 		return(<div>
 			<Head>
-			  <title>reactbootstrap parts</title>
+			  <title>next parts</title>
 		      <meta httpEquiv="content-type" content="text/html;charset=utf-8" />
-		      <link rel="stylesheet" type="text/css" href="/static/index.css" />
-		      <link rel="stylesheet" type="text/css" href="/static/bootstrap.min.css" />
-	    	  <link rel="stylesheet" type="text/css" href="/static/bootstrap-theme.min.css" />
-	    	  <link rel="stylesheet" type="text/css" href="/static/react-datetime.css" />
-	    	  <link rel="stylesheet" type="text/css" href="/static/react-select.css" />
 	    	 </Head>
 	    	 <App />
 	    	 </div>);

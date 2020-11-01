@@ -1,8 +1,5 @@
-
 var models = require("./models");
 const Op = models.Sequelize.Op;
-
-
 const express = require('express')
 const next = require('next')
 var ss = require('socket.io-stream');
@@ -28,17 +25,17 @@ models.sequelize.sync().then(
 app.prepare()
 .then(() => {
   const server = express()
-  server.get('/fonts/glyphicons-halflings-regular.woff2', (req, res) => {
-    res.redirect('/static/fonts/glyphicons-halflings-regular.woff2')
+  server.get('/favicon.ico', (req, res) => {
+    res.redirect('/static/favicon.ico')
   })
 
-  server.get('/fonts/glyphicons-halflings-regular.woff', (req, res) => {
-    res.redirect('/static/fonts/glyphicons-halflings-regular.woff')
-  })
-  ///fonts/glyphicons-halflings-regular.ttf
-  server.get('/fonts/glyphicons-halflings-regular.ttf', (req, res) => {
-    res.redirect('/static/fonts/glyphicons-halflings-regular.ttf')
-  })
+  // server.get('/fonts/glyphicons-halflings-regular.woff', (req, res) => {
+  //   res.redirect('/static/fonts/glyphicons-halflings-regular.woff')
+  // })
+  // ///fonts/glyphicons-halflings-regular.ttf
+  // server.get('/fonts/glyphicons-halflings-regular.ttf', (req, res) => {
+  //   res.redirect('/static/fonts/glyphicons-halflings-regular.ttf')
+  // })
   server.get('*', (req, res) => {
     return handle(req, res)
   })
