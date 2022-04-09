@@ -15,7 +15,7 @@
     "csv": "^5.3.2",
     "express": "^4.17.1",
     "immutability-helper": "^2.9.1",
-    "moment": "^2.29.1",
+    "moment": "^2.29.2",
     "next": "^10.0.0",
     "react": "^17.0.1",
     "react-autosuggest": "^10.0.3",
