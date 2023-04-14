@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 // import DlgTodos from './DlgTodos';
 import {
-  Badge,InputGroup,FormControl,
+  Badge,FormControl,
   Navbar,
   Nav,
   DropdownButton,
@@ -387,18 +387,18 @@ export default class App extends Component {
     }
     if (hasprev) {
       prev = (
-        <InputGroup.Prepend><Button variant="light" onClick={this.handlePrev}>
+        <Button variant="light" onClick={this.handlePrev}>
           前一页
-        </Button></InputGroup.Prepend>
+        </Button>
       );
     } else {
       prev = null;
     }
     if (hasnext) {
       next = (
-      <InputGroup.Append><Button variant="light" onClick={this.handleNext}>
+      <Button variant="light" onClick={this.handleNext}>
           后一页
-        </Button></InputGroup.Append>
+        </Button>
       );
     } else {
       next = null;
@@ -548,7 +548,6 @@ export default class App extends Component {
             </Dropdown.Item>
           </DropdownButton>
           <div style={{marginLeft:"10px",width:"300px"}}>
-          <InputGroup>
             <FormControl
               onKeyPress={this.keypress}
               type="text"
@@ -556,7 +555,6 @@ export default class App extends Component {
               placeholder="合同 or 仪器编号 or 客户"
               onChange={this.handleSearchChange}
             />
-            <InputGroup.Append>
               <Button variant="info" onClick={this.search}>
                 搜索
                 <span
@@ -564,8 +562,6 @@ export default class App extends Component {
                   aria-hidden="true"
                 />
               </Button>
-            </InputGroup.Append>
-          </InputGroup>
           </div>
           <Button
             variant="primary"
@@ -643,19 +639,15 @@ export default class App extends Component {
           </InputGroup>     
         </div>*/}
         <div style={{marginLeft:"10px",width:"100px"}}>
-          <InputGroup>
             <FormControl
                maxLength="6"
           size="6"
           onChange={this.handlePageChange}
           value={this.state.start_input}
             />
-            <InputGroup.Append>
               <Button id="page_go" className="btn btn-info" onClick={this.jump}>
           跳转
         </Button>
-            </InputGroup.Append>
-          </InputGroup>
           </div>
       
         </div>

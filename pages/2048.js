@@ -73,8 +73,9 @@ class Board {
 }
 
 addTile() {
-  var res = new Tile;
-  Tile.apply(res, arguments);
+  var res = new Tile();
+  // Tile.apply(res, arguments);
+  console.log(arguments)
   this.tiles.push(res);
   return res;
 }
