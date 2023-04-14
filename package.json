@@ -8,9 +8,11 @@
   },
   "dependencies": {
     "@emotion/react": "^11.10.6",
+    "@emotion/styled": "^11.10.6",
     "@fortawesome/fontawesome-svg-core": "latest",
     "@fortawesome/free-solid-svg-icons": "latest",
     "@fortawesome/react-fontawesome": "latest",
+    "@mui/material": "^5.12.0",
     "bootstrap": "latest",
     "chart.js": "latest",
     "classnames": "^2.3.2",
@@ -34,7 +36,9 @@
     "socket.io": "latest",
     "socket.io-client": "latest",
     "socket.io-stream": "latest",
+    "sprintf-js": "^1.1.2",
     "sqlite3": "latest",
+    "styled-components": "^5.3.9",
     "xlsx": "latest"
   }
 }
