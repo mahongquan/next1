@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 var io = require("socket.io-client");
-var socket=io('http://localhost:8000');
+var socket=io();
 function getRaw(url,cb) {
   socket.emit("/get"+url,{},cb);
 }

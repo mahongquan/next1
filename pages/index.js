@@ -13,7 +13,7 @@ function Home() {
       Click{' '}<Link href="/about">about</Link>{' '}to read more
       <p><Link href="/Post?slug=something" as="/Post">post</Link></p>
       <p><Link href="/a4">a4</Link></p>
-      <p><Link href="/css_layout">css_layout</Link></p>
+      <p><Link href="/css2">css_layout</Link></p>
       <p><Link href="/emotion1">emotion1</Link></p>
       <p><Link href="/Head">head</Link></p>
       <p><Link href="/help">help</Link></p>
@@ -24,6 +24,8 @@ function Home() {
       <p><Link href="/md">markdown</Link></p>
       <p><Link href="/2048">2048</Link></p>
       <p><Link href="/image1">static image</Link></p>
+      <p><Link href="/todos">todos</Link></p>
+      <p><Link href="/other/2048">other 2048</Link></p>
     </div>
     </>
   );
